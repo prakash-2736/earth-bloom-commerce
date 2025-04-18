@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -8,8 +9,15 @@ import { useAuth } from "@/context/AuthContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ModeToggle } from "@/components/ui/mode-toggle";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
+import { 
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription
+} from "@/components/ui/dialog";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -17,6 +25,7 @@ const Login = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfigError, setShowConfigError] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -36,19 +45,23 @@ const Login = () => {
       navigate("/dashboard");
     } catch (err: any) {
       console.error("Login error:", err);
-      let errorMessage = "Failed to log in. Please check your credentials.";
       
       if (err.code === "auth/configuration-not-found") {
-        errorMessage = "Firebase authentication is not properly configured. Please contact support.";
-      } else if (err.code === "auth/user-not-found" || err.code === "auth/wrong-password") {
-        errorMessage = "Invalid email or password";
-      } else if (err.code === "auth/too-many-requests") {
-        errorMessage = "Too many failed login attempts. Please try again later.";
-      } else if (err.message) {
-        errorMessage = err.message;
+        setError("Firebase authentication is not properly configured");
+        setShowConfigError(true);
+      } else {
+        let errorMessage = "Failed to log in. Please check your credentials.";
+        
+        if (err.code === "auth/user-not-found" || err.code === "auth/wrong-password") {
+          errorMessage = "Invalid email or password";
+        } else if (err.code === "auth/too-many-requests") {
+          errorMessage = "Too many failed login attempts. Please try again later.";
+        } else if (err.message) {
+          errorMessage = err.message;
+        }
+        
+        setError(errorMessage);
       }
-      
-      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -136,6 +149,40 @@ const Login = () => {
           </div>
         </div>
       </div>
+
+      <Dialog open={showConfigError} onOpenChange={setShowConfigError}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-amber-500" />
+              Firebase Configuration Error
+            </DialogTitle>
+            <DialogDescription className="pt-4">
+              <p className="mb-4">
+                Firebase Authentication service is not properly configured for this project. This might happen if:
+              </p>
+              <ul className="list-disc pl-5 space-y-2">
+                <li>Firebase Authentication service hasn't been enabled in the Firebase console</li>
+                <li>Email/Password authentication method is not enabled</li>
+                <li>The project configuration details are incorrect</li>
+              </ul>
+              <div className="mt-4 pt-4 border-t">
+                <p>To use a demo version without authentication, click the button below:</p>
+                <Button 
+                  variant="outline" 
+                  className="w-full mt-4"
+                  onClick={() => {
+                    setShowConfigError(false);
+                    navigate("/dashboard");
+                  }}
+                >
+                  Continue to Demo
+                </Button>
+              </div>
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
 
       <Footer />
     </div>
