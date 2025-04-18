@@ -2,13 +2,35 @@
 import { Link } from "react-router-dom";
 import { ModeToggle } from "./ui/mode-toggle";
 import { Button } from "./ui/button";
-import { ShoppingCart, User, Menu, X } from "lucide-react";
+import { ShoppingCart, User, Menu, X, Shield } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 const Navbar = () => {
   const { currentUser, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      if (currentUser) {
+        try {
+          const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+          if (userDoc.exists() && userDoc.data().role === "admin") {
+            setIsAdmin(true);
+          }
+        } catch (error) {
+          console.error("Error checking admin status:", error);
+        }
+      }
+    };
+    
+    if (currentUser) {
+      checkAdminStatus();
+    }
+  }, [currentUser]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -54,6 +76,16 @@ const Navbar = () => {
                   Dashboard
                 </Link>
               </Button>
+              
+              {isAdmin && (
+                <Button variant="ghost" className="text-primary" asChild>
+                  <Link to="/admin">
+                    <Shield className="h-5 w-5 mr-2" />
+                    Admin
+                  </Link>
+                </Button>
+              )}
+              
               <Button variant="outline" onClick={handleLogout}>
                 Logout
               </Button>
@@ -121,6 +153,17 @@ const Navbar = () => {
                 >
                   Dashboard
                 </Link>
+                
+                {isAdmin && (
+                  <Link 
+                    to="/admin" 
+                    className="px-4 py-2 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Admin Panel
+                  </Link>
+                )}
+                
                 <Link 
                   to="/cart" 
                   className="px-4 py-2 rounded-md hover:bg-secondary transition-colors"
