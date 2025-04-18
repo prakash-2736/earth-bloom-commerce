@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Routes, Route, Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -8,36 +7,12 @@ import {
   User, Package, BarChart, Settings, LogOut, Menu, X, Users, ShoppingCart
 } from "lucide-react";
 
+import ProductManagement from "@/components/admin/ProductManagement";
+import UserManagement from "@/components/admin/UserManagement";
+import OrderManagement from "@/components/admin/OrderManagement";
+import Analytics from "@/components/admin/Analytics";
+
 // Admin sub-pages
-// Admin sub-pages
-const ProductManagement = () => (
-  <div className="space-y-6">
-    <h1 className="text-3xl font-bold">Product Management</h1>
-    <p className="text-muted-foreground">Manage your product inventory, prices, and details.</p>
-  </div>
-);
-
-const UserManagement = () => (
-  <div className="space-y-6">
-    <h1 className="text-3xl font-bold">User Management</h1>
-    <p className="text-muted-foreground">View and manage customer accounts.</p>
-  </div>
-);
-
-const OrderManagement = () => (
-  <div className="space-y-6">
-    <h1 className="text-3xl font-bold">Order Management</h1>
-    <p className="text-muted-foreground">Track and process customer orders.</p>
-  </div>
-);
-
-const Analytics = () => (
-  <div className="space-y-6">
-    <h1 className="text-3xl font-bold">Analytics Dashboard</h1>
-    <p className="text-muted-foreground">View sales, customer, and product analytics.</p>
-  </div>
-);
-
 const SettingsPage = () => (
   <div className="space-y-6">
     <h1 className="text-3xl font-bold">System Settings</h1>
