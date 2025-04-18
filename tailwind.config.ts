@@ -52,6 +52,20 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				// Nature-inspired colors
+				earth: {
+					50: '#f3f8ef',
+					100: '#e6f0db',
+					200: '#cfe3bc',
+					300: '#b0d194',
+					400: '#8ebf6a',
+					500: '#66a43d',
+					600: '#4d862a',
+					700: '#3c6823',
+					800: '#325320',
+					900: '#2b451e',
+					950: '#13260b',
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
