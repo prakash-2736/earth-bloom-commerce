@@ -5,15 +5,14 @@ import { getFirestore } from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
 
 // Your Firebase configuration
-// Replace these with your actual Firebase config values
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID",
-  measurementId: "YOUR_MEASUREMENT_ID"
+  apiKey: "AIzaSyAK9hIIO8cEY20jsYqBW-HK4YV1Ynr2BhU",
+  authDomain: "natureaft-9ef1c.firebaseapp.com",
+  projectId: "natureaft-9ef1c",
+  storageBucket: "natureaft-9ef1c.firebasestorage.app",
+  messagingSenderId: "991532648239",
+  appId: "1:991532648239:web:3d03994f402920d5e643da",
+  measurementId: "G-W1K97LC75V"
 };
 
 // Initialize Firebase
