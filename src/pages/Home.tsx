@@ -1,10 +1,10 @@
-
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { ArrowRight, CheckCircle, Leaf, Droplets, Award, Mail, Phone, Facebook, Twitter, Instagram } from "lucide-react";
+import { ArrowRight, CheckCircle, Leaf, Droplets, Award, Mail, Phone, Facebook, Twitter, Instagram, ShoppingCart } from "lucide-react";
+import { toast } from "sonner";
 
 const Home = () => {
   const productRef = useRef<HTMLDivElement>(null);
@@ -21,6 +21,12 @@ const Home = () => {
       }
     }
   }, []);
+
+  const handleAddToCart = () => {
+    toast.success("Product added to cart!", {
+      description: "1L Bio-Decomposer Spray added to your cart"
+    });
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -108,11 +114,16 @@ const Home = () => {
               </ul>
               
               <div className="flex flex-wrap gap-4 pt-4">
-                <Button size="lg">
+                <Button 
+                  size="lg" 
+                  onClick={handleAddToCart}
+                  className="flex items-center gap-2"
+                >
+                  <ShoppingCart className="h-5 w-5" />
                   Add to Cart
                 </Button>
-                <Button size="lg" variant="outline">
-                  Buy Now
+                <Button size="lg" variant="outline" asChild>
+                  <Link to="/cart">View Cart</Link>
                 </Button>
               </div>
             </div>
