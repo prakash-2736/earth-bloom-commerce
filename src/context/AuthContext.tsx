@@ -9,6 +9,7 @@ import {
   UserCredential
 } from "firebase/auth";
 import { auth } from "@/lib/firebase";
+import { toast } from "sonner";
 
 interface AuthContextType {
   currentUser: User | null;
@@ -33,11 +34,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   function signup(email: string, password: string) {
-    return createUserWithEmailAndPassword(auth, email, password);
+    try {
+      return createUserWithEmailAndPassword(auth, email, password);
+    } catch (error: any) {
+      console.error("Signup error:", error);
+      toast.error(error.message || "Failed to create account");
+      throw error;
+    }
   }
 
   function login(email: string, password: string) {
-    return signInWithEmailAndPassword(auth, email, password);
+    try {
+      return signInWithEmailAndPassword(auth, email, password);
+    } catch (error: any) {
+      console.error("Login error:", error);
+      toast.error(error.message || "Failed to log in");
+      throw error;
+    }
   }
 
   function logout() {

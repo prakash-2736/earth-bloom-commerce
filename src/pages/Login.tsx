@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -10,6 +9,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ModeToggle } from "@/components/ui/mode-toggle";
 import { Eye, EyeOff } from "lucide-react";
+import { toast } from "sonner";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -32,9 +32,23 @@ const Login = () => {
     try {
       setLoading(true);
       await login(email, password);
+      toast.success("Login successful!");
       navigate("/dashboard");
     } catch (err: any) {
-      setError(err.message || "Failed to log in. Please check your credentials.");
+      console.error("Login error:", err);
+      let errorMessage = "Failed to log in. Please check your credentials.";
+      
+      if (err.code === "auth/configuration-not-found") {
+        errorMessage = "Firebase authentication is not properly configured. Please contact support.";
+      } else if (err.code === "auth/user-not-found" || err.code === "auth/wrong-password") {
+        errorMessage = "Invalid email or password";
+      } else if (err.code === "auth/too-many-requests") {
+        errorMessage = "Too many failed login attempts. Please try again later.";
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -12,6 +11,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ModeToggle } from "@/components/ui/mode-toggle";
 import { Eye, EyeOff } from "lucide-react";
+import { toast } from "sonner";
 
 const Signup = () => {
   const [name, setName] = useState("");
@@ -55,9 +55,25 @@ const Signup = () => {
         createdAt: new Date().toISOString(),
       });
       
+      toast.success("Account created successfully!");
       navigate("/dashboard");
     } catch (err: any) {
-      setError(err.message || "Failed to create an account");
+      console.error("Signup error:", err);
+      let errorMessage = "Failed to create an account";
+      
+      if (err.code === "auth/configuration-not-found") {
+        errorMessage = "Firebase authentication is not properly configured. Please contact support.";
+      } else if (err.code === "auth/email-already-in-use") {
+        errorMessage = "Email is already in use";
+      } else if (err.code === "auth/invalid-email") {
+        errorMessage = "Invalid email address";
+      } else if (err.code === "auth/weak-password") {
+        errorMessage = "Password is too weak";
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
